@@ -40,10 +40,14 @@ def transaction_create(request, pk):
                 messages.error(request, f"amount can't be zero or account balance not enough.")
                 return redirect('accounts:transaction_create', pk)
 
-
+            account.balance -= form.cleaned_data['amount']
+            account.save()
             transaction = form.save(commit=False)
             transaction.sender = account
             transaction.save()
+            receiver = form.cleaned_data['receiver']
+            receiver.balance += form.cleaned_data['amount']
+            receiver.save()
             return redirect('accounts:account_detail', pk)
         else:
             # Form is not valid; display errors
