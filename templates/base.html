@@ -97,14 +97,22 @@ tr:nth-child(even) {
 <body>
 
 <div class="topnav">
-  <a class="active" href="{% url 'accounts:account_list' %}">Home</a>
+  <a {% if page == 'home' %} class="active"{% endif %} href="{% url 'accounts:account_list' %}">Home</a>
   <a href="#about">About</a>
   <a href="#contact">Contact</a>
   <div class="search-container">
-    <form action="{% url 'accounts:account_list' %}">
+      {% if page == 'account_detail' %}
+          <form action="{% url 'accounts:account_detail' account.id %}">
+      <input type="text" placeholder="Search with name.." name="search">
+      <button type="submit"><i class="fa fa-search"></i></button>
+    </form>
+          {% else %}
+          <form action="{% url 'accounts:account_list' %}">
       <input type="text" placeholder="Search.." name="search">
       <button type="submit"><i class="fa fa-search"></i></button>
     </form>
+      {% endif %}
+
   </div>
 </div>
 {% block content %}

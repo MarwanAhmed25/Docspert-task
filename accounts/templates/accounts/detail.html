@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+    <h2>Account: {{ account.name }}</h2>
+    {% if transactions %}
+    <table>
+  <thead>
+  <th>ID</th>
+  <th>Sender</th>
+  <th>Receiver</th>
+  <th>Amount</th>
+  <th>Date</th>
+  </thead>
+    {% for transaction in transactions %}
+         <tr>
+              <td>{{ transaction.id }}</td>
+              <td>{{ transaction.sender }}</td>
+              <td>{{ transaction.receiver }}</td>
+              <td>{{ transaction.amount }}</td>
+              <td>{{ transaction.created_in }}</td>
+         </tr>
+    {% endfor %}
+
+
+</table>
+
+{% else %}
+    <h2>No transactions exist</h2>
+{% endif %}
+
+
+
+{% endblock %}

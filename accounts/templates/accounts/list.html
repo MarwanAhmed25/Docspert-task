@@ -14,7 +14,7 @@
   </thead>
     {% for account in accounts %}
          <tr>
-              <td>{{ account.id }}</td>
+              <td><a href="{% url 'accounts:account_detail' account.id %}">{{ account.id }}</a></td>
               <td>{{ account.name }}</td>
               <td>{{ account.balance }}</td>
          </tr>
