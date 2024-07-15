@@ -10,7 +10,7 @@ def account_list(request):
     if request.method == 'POST':
         try:
             upload_file = request.FILES.get('file')
-            wb = get_file_data(upload_file)
+            get_file_data(upload_file)
 
         except Exception as e:
             messages.error(request, e)

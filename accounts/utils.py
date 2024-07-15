@@ -1,18 +1,16 @@
 import csv
+import io
 import json
 from .models import Account
 from openpyxl import load_workbook
 
 def get_file_data(filename):
-    wb = []
     extension = filename.name.split('.')[1]
     if extension == 'csv':
-        wb = csv.reader(filename)
-
-        for row in wb:
-            print(row)
-            # pk, name, balance = row['id'], row['name'], row['balance']
-            # Account.objects.create(name=name, id=pk, balance=balance)
+        file = filename.read().decode('utf-8')
+        wb = csv.DictReader(io.StringIO(file))
+        for obj in wb:
+            Account.objects.create(name=obj['Name'], id=obj['ID'], balance=obj['Balance'])
 
     elif extension == 'xlsx':
         wb = load_workbook(filename=filename).worksheets
@@ -25,5 +23,3 @@ def get_file_data(filename):
         wb = json.load(filename)
         for obj in wb:
             Account.objects.create(name=obj['Name'], id=obj['ID'], balance=obj['Balance'])
-
-    return wb
