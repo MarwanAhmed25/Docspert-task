@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator
 class Account(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     name = models.CharField(max_length=100, null=False, blank=False)
-    balance = models.FloatField(default=0, validators=[MinValueValidator(0)])
+    balance = models.FloatField(default=0, validators=[MinValueValidator(0)], null=True, blank=True)
 
     class Meta:
         ordering = ['name']

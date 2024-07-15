@@ -36,6 +36,7 @@ def account_create(request):
         if form.is_valid():
             form.save()
             return redirect('accounts:account_list')  # Redirect to your home page
+
         else:
             # Form is not valid; display errors
             for field, errors in form.errors.items():
