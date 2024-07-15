@@ -35,9 +35,15 @@ def transaction_create(request, pk):
     if request.method == 'POST':
         form = TransactionForm(request.POST)
         if form.is_valid():
-            acc = form.save(commit=False)
-            acc.sender = Account.objects.get(id=pk)
-            acc.save()
+            account = Account.objects.get(id=pk)
+            if form.cleaned_data['amount'] == 0 or (account.balance - form.cleaned_data['amount']) < 0:
+                messages.error(request, f"amount can't be zero or account balance not enough.")
+                return redirect('accounts:transaction_create', pk)
+
+
+            transaction = form.save(commit=False)
+            transaction.sender = account
+            transaction.save()
             return redirect('accounts:account_detail', pk)
         else:
             # Form is not valid; display errors
