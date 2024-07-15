@@ -12,4 +12,7 @@ class TransactionForm(forms.ModelForm):
         model = Transaction
         fields = ['sender', 'receiver', 'amount']
 
+class FileForm(forms.Form):
+    file = forms.FileField()
+
 

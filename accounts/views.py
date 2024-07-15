@@ -1,20 +1,32 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from openpyxl import load_workbook
 from django.contrib import messages
 from .models import Account, Transaction
-from .forms import AccountForm, TransactionForm
+from .forms import AccountForm, TransactionForm, FileForm
 # Create your views here.
 def account_list(request):
+    if request.method == 'POST':
+        try:
+            wb = load_workbook(filename=request.FILES.get('file'))
+            for sheet in wb.worksheets:
+                for row in sheet.iter_rows(min_row=2):
+                    pk, name, balance = row[0].value, row[1].value, row[2].value
+
+                    Account.objects.create(name=name, id=pk, balance=balance)
+        except Exception as e:
+            messages.error(request, e)
+
     if request.GET.get('search'):
         accounts = Account.objects.filter(name__icontains=request.GET.get('search'))
     else:
         accounts = Account.objects.all()
-    return render(request, 'accounts/list.html', {'accounts': accounts, 'page':'home'})
+    return render(request, 'accounts/list.html', {'accounts': accounts, 'page':'home', 'form': FileForm()})
 
 def account_detail(request, pk):
     account = Account.objects.get(pk=pk)
     if request.GET.get('search'):
-        transactions = Transaction.objects.filter(Q(sender__name__icontains=request.GET.get('search'))|Q(receiver__name__icontains=request.GET.get('search')))
+        transactions = Transaction.objects.filter((Q(sender=account)|Q(receiver=account)) & (Q(sender__name__icontains=request.GET.get('search'))|Q(receiver__name__icontains=request.GET.get('search'))))
     else:
         transactions = Transaction.objects.filter(Q(sender=account)|Q(receiver=account))
 
@@ -26,9 +38,15 @@ def account_create(request):
         if form.is_valid():
             form.save()
             return redirect('accounts:account_list')  # Redirect to your home page
+        else:
+            # Form is not valid; display errors
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
     else:
         form = AccountForm()
     return render(request, 'accounts/create_account.html', {'form': form})
+
 
 def transaction_create(request, pk):
     accounts = Account.objects.filter(~Q(id=pk))

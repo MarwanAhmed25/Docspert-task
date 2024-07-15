@@ -18,5 +18,7 @@ class Transaction(models.Model):
     amount = models.FloatField(default=0, validators=[MinValueValidator(0)])
     created_in = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_in']
     def __str__(self):
         return str(self.id)
