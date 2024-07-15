@@ -1,19 +1,17 @@
 from django.shortcuts import render, redirect
 from django.db.models import Q
-from openpyxl import load_workbook
 from django.contrib import messages
+from .utils import get_file_data
 from .models import Account, Transaction
 from .forms import AccountForm, TransactionForm, FileForm
 # Create your views here.
 def account_list(request):
+    # Account.objects.all().delete()
     if request.method == 'POST':
         try:
-            wb = load_workbook(filename=request.FILES.get('file'))
-            for sheet in wb.worksheets:
-                for row in sheet.iter_rows(min_row=2):
-                    pk, name, balance = row[0].value, row[1].value, row[2].value
+            upload_file = request.FILES.get('file')
+            wb = get_file_data(upload_file)
 
-                    Account.objects.create(name=name, id=pk, balance=balance)
         except Exception as e:
             messages.error(request, e)
 
