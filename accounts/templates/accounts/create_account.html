@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<h2>Create account</h2>
+    <form action="" method="post" enctype="application/x-www-form-urlencoded">
+    {% csrf_token %}
+    <div>
+    <label for="id_name">Name:</label>
+
+
+
+<input class="form_text" type="text" name="name" maxlength="100" required="" id="id_name">
+
+</div>
+    <div>
+    <label for="id_balance">Balance:</label>
+
+
+
+<input type="number" name="balance" value="0" step="any" required="" id="id_balance">
+
+
+
+</div>
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Oops! There are some errors:</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <input name="submit" type="submit" value="Create">
+</form>
+
+
+{% endblock %}

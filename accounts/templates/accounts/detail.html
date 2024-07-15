@@ -4,7 +4,8 @@
 
 
 
-    <h2>Account: {{ account.name }}</h2>
+    <h2>Account: <a href="{% url 'accounts:account_detail' account.id %}">{{ account.name }}</a></h2>
+    <h2>Balance: {{ account.balance }}$</h2>
     {% if transactions %}
     <table>
   <thead>

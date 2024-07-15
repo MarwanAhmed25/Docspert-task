@@ -12,8 +12,8 @@ class Account(models.Model):
 
 
 class Transaction(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
-    sender = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='sender_transactions')
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    sender = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='sender_transactions', null=True, blank=True)
     receiver = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='receiver_transactions')
     amount = models.FloatField(default=0, validators=[MinValueValidator(0)])
     created_in = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Create transaction</h2>
+    <form action="" method="post" enctype="application/x-www-form-urlencoded">
+    {% csrf_token %}
+    <div>
+    <label for="id_receiver">Receiver:</label>
+
+
+
+<select name="receiver" required="" id="id_receiver">
+  <option value="" selected="">---------</option>
+    {% for account in accounts %}
+  <option value="{{ account.id }}">{{ account }}</option>
+    {% endfor %}
+</select>
+
+</div>
+    <div>
+    <label for="id_amount">Amount:</label>
+
+
+
+<input type="number" name="amount" value="0" step="any" required="" id="id_amount">
+
+
+
+</div>
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <strong>Oops! There are some errors:</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <input name="submit" type="submit" value="Create">
+</form>
+{% endblock %}
