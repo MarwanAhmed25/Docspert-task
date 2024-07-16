@@ -1,6 +1,6 @@
 # Docspert
 
-Can upload file with csv, json and excel sheet
+Can upload file with csv, json and excel sheet type
 
 
 ## Basic Commands
