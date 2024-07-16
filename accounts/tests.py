@@ -56,3 +56,60 @@ class AccountCreateViewTest(TestCase):
         self.assertIn('form', response.context)
 
 
+class AccountDetailViewTest(TestCase):
+    def setUp(self):
+        # Create test data (adjust as needed)
+        self.sender = Account.objects.create(name='sender Account', balance=200)
+        self.receiver = Account.objects.create(name='receiver Account', balance=200)
+        self.transaction1 = Transaction.objects.create(sender=self.sender, receiver=self.receiver, amount=100)
+        self.transaction2 = Transaction.objects.create(receiver=self.sender, sender=self.receiver, amount=50)
+
+    def test_account_detail_with_search_query(self):
+        response = self.client.get(reverse('accounts:account_detail', args=[self.sender.pk]), {'search': 'receiver'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/detail.html')
+        self.assertIn('account', response.context)
+        self.assertIn('transactions', response.context)
+
+    def test_account_detail_without_search_query(self):
+        response = self.client.get(reverse('accounts:account_detail', args=[self.sender.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/detail.html')
+        self.assertIn('account', response.context)
+        self.assertIn('transactions', response.context)
+
+
+class AccountListViewTest(TestCase):
+    def test_account_list_with_search_query(self):
+        # Create test accounts (adjust as needed)
+        Account.objects.create(name='Test Account 1')
+        Account.objects.create(name='Another Test Account')
+
+        response = self.client.get(reverse('accounts:account_list'), {'search': 'Another'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['accounts']), 1)
+        self.assertTemplateUsed(response, 'accounts/list.html')
+        self.assertIn('accounts', response.context)
+
+
+    def test_account_list_without_search_query(self):
+        # Create test accounts (adjust as needed)
+        Account.objects.create(name='Test Account 1')
+        Account.objects.create(name='Another Test Account')
+
+        response = self.client.get(reverse('accounts:account_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/list.html')
+        self.assertIn('accounts', response.context)
+        self.assertEqual(len(response.context['accounts']), 2)
+
+
+    def test_rendering_template(self):
+        response = self.client.get(reverse('accounts:account_list'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'accounts/list.html')
+        self.assertIn('accounts', response.context)
+        self.assertIn('form', response.context)
+
+
+
