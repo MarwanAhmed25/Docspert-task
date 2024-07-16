@@ -2,7 +2,7 @@ version: '3.11'
 
 services:
   django:
-    image: docspert:0.0.1
+    image: 4125881/docspert:0.0.1
     build: .
     ports:
       - "8000:8000"
