@@ -8,11 +8,11 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 
 # Install dependencies
-COPY req.txt /app/
+COPY req.txt .
 RUN pip install --no-cache-dir -r req.txt
 
 # Copy the current directory contents into the container at /app/
-COPY . /app/
+COPY . .
 
 # Run Django migrations and collect static files
 RUN python manage.py migrate
