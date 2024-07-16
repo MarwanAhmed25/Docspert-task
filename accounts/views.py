@@ -6,11 +6,14 @@ from .models import Account, Transaction
 from .forms import AccountForm, TransactionForm, FileForm
 # Create your views here.
 def account_list(request):
-    # Account.objects.all().delete()
     if request.method == 'POST':
         try:
             upload_file = request.FILES.get('file')
-            get_file_data(upload_file)
+            is_valid = get_file_data(upload_file)
+            if not is_valid:
+                messages.error(request, 'file must be a csv, json or excel sheet')
+                return render(request, 'accounts/list.html', {'accounts': accounts, 'page':'home', 'form': FileForm()})
+
 
         except Exception as e:
             messages.error(request, e)

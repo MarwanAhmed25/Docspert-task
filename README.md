@@ -1,6 +1,6 @@
 # Docspert
 
-Task
+Can upload file with csv, json and excel sheet
 
 
 ## Basic Commands

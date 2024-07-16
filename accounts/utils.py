@@ -1,6 +1,7 @@
 import csv
 import io
 import json
+from django.contrib import messages
 from .models import Account
 from openpyxl import load_workbook
 
@@ -23,3 +24,6 @@ def get_file_data(filename):
         wb = json.load(filename)
         for obj in wb:
             Account.objects.create(name=obj['Name'], id=obj['ID'], balance=obj['Balance'])
+    else:
+        return 0
+    return 1
